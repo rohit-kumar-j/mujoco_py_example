@@ -1,0 +1,146 @@
+<mujoco model="Flying-Dog">
+  <compiler autolimits="true"/>
+
+  <asset>
+    <mesh name="chassis" scale="0.005 0.005 0.005" file="frame.obj" />
+    <mesh name="motor_AX18" scale="0.05 0.05 0.05" file="AX12.stl" />
+    <mesh name="prop" scale="0.005 0.005 0.005" file="propeller_94.STL" />
+    <mesh name="bldc1" scale="0.005 0.005 0.005" file="propeller_MT2208.STL" />
+    <mesh name="bldc2" scale="0.005 0.005 0.005" file="propeller_ADAPTER.STL" />
+    <mesh name="spinner" scale="0.005 0.005 0.005" file="propeller_spinner.STL" />
+
+    <mesh name="coxa2" scale="0.005 0.005 0.005" file="coxa2.STL" />
+    <mesh name="femur2" scale="0.005 0.005 0.005" file="femur2.STL" />
+    <mesh name="tibia2" scale="0.005 0.005 0.005" file="tibia2.STL" />
+
+    <mesh name="coxa_AX18" scale="0.005 0.005 0.005" file="coxa_AX18.STL" />
+    <mesh name="coxa_MX28" scale="0.005 0.005 0.005" file="coxa_MX28.STL" />
+    <mesh name="femur_AX18" scale="0.005 0.005 0.005" file="femur_AX18.STL" />
+    <mesh name="femur_MX28" scale="0.005 0.005 0.005" file="femur_MX28.STL" />
+    <mesh name="tibia_AX18" scale="0.005 0.005 0.005" file="tibia_AX18.STL" />
+    <mesh name="tibia_MX28" scale="0.005 0.005 0.005" file="tibia_MX28.STL" />
+    <mesh name="body_hexa_AX18" scale="0.005 0.005 0.005" file="body_hexa_AX18.STL" />
+    <mesh name="body_hexa_MX28" scale="0.005 0.005 0.005" file="body_hexa_MX28.STL" />
+    <mesh name="body_quad_AX18" scale="0.005 0.005 0.005" file="body_quad_AX18.STL" />
+    <mesh name="body_quad_MX28" scale="0.005 0.005 0.005" file="body_quad_MX28.STL" />
+    <mesh name="rubber_foot" scale="0.005 0.005 0.005" file="Rubber_Foot.STL" />
+
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1=".1 .2 .3" rgb2=".2 .3 .4"/>
+    <material name="grid" texture="grid" texrepeat="1 1" texuniform="true" reflectance=".2"/>
+  </asset>
+
+  <default>
+    <motor ctrlrange="-33.5 33.5" ctrllimited="true"/>
+    <camera fovy="60"/>
+    <joint damping="0.01" armature="0.01" frictionloss="0.2" />
+  </default>
+
+  <worldbody>
+    <geom name="floor" size="0 0 .05" type="plane" material="grid" condim="3"/>
+    <light name="spotlight" mode="targetbodycom" castshadow="false" target="fdog" diffuse=".8 .8 .8" specular="0.3 0.3 0.3" pos="0 -6 4" cutoff="30"/>
+    <body name="fdog" pos="0 0 .8">
+      <freejoint/>
+      <light name="top light1" castshadow="false" pos="1 1 1" mode="targetbodycom" target="fdog" diffuse=".4 .4 .4"/>
+      <light name="top light2" castshadow="false" pos="-1 1 1" mode="targetbodycom" target="fdog" diffuse=".4 .4 .4"/>
+      <light name="top light3" castshadow="false" pos="-1 -1 1" mode="targetbodycom" target="fdog" diffuse=".4 .4 .4"/>
+      <light name="top light4" castshadow="false" pos="1 -1 1" mode="targetbodycom" target="fdog" diffuse=".4 .4 .4"/>
+      <!-- <geom name="torso" type="box" size="0.5 0.5 0.5"/> -->
+      <geom name="chasis1" type="mesh" mesh="chassis" pos="0 0 0.176"/>
+      <geom name="chasis2" type="mesh" mesh="chassis"/>
+      <camera name="front_cam" mode="fixed" euler="0 0 0" pos="0 0 1" fovy="45"/>
+      <geom name="fl_hip_motor" type="mesh" mesh="motor_AX18" pos="0.325 0.602 0.096" euler="0 0 -135" rgba="0 0 0 1"/>
+      <geom name="fr_hip_motor" type="mesh" mesh="motor_AX18" pos="0.325 -0.602 0.096" euler="0 0 135" rgba="0 0 0 1"/>
+      <geom name="br_hip_motor" type="mesh" mesh="motor_AX18" pos="-0.325 0.602 0.096" euler="0 0 -45" rgba="0 0 0 1"/>
+      <geom name="bl_hip_motor" type="mesh" mesh="motor_AX18" pos="-0.325 -0.602 0.096" euler="0 0 45" rgba="0 0 0 1"/>
+      <body name="fr" pos="0.326 0.598 0.095" euler="0 0 15">
+        <joint type="hinge" damping=".2" stiffness="1" armature=".01" />
+        <geom name="fr_thigh" type="mesh" mesh="coxa2" pos="-0.066 -0.115 -0.12" rgba="1 0.54 0 1"/>
+        <body name="fr_mid_link" pos="0.46 0 0" euler="90 0 0" >
+          <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+          <geom name="fr_thigh_motor" type="mesh" mesh="motor_AX18" pos="0 0 0" euler="0 0 0" rgba="0 0 0 1"/>
+          <geom name="fr_thigh_link" type="mesh" mesh="femur2" pos="-0.05 0.108 -0.12" euler="0 0 -90" rgba="1 0.54 0 1"/>
+          <geom name="fr_BLDC" type="mesh" mesh="bldc1" pos="-0.545 0.1 -0.618" rgba="0.4 0.5 0.8 1" />
+          <body name="fr_prop" pos="0.074 0.24 0" euler="-90 0 0">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" />
+            <geom name="fr_prop" type="mesh" mesh="prop" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.2 0.4 0.8 1" />
+            <geom name="fr_prop_spinner" type="mesh" mesh="spinner" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.5 0 0 1" />
+          </body>
+          <body name="fr_final_link" pos="0.326 -0.075 0." euler="0 0 -45">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+            <!-- <geom name="ref_cylinder" type="cylinder" size="0.01 0.2"/> -->
+            <!-- <geom name="ref_sphere" type="sphere" size="0.03"/> -->
+            <geom name="fr_final_motor" type="mesh" mesh="motor_AX18" rgba="0 0 0 1"/>
+            <geom name="fr_final_link" type="mesh" mesh="tibia2" pos="0.433 -0.6 0.125" euler="180 0 180" rgba="1 0.54 0 1"/>
+          </body>
+        </body>
+      </body>
+      <body name="fl" pos="-0.326 0.598 0.095" euler="0 0 165">
+        <joint type="hinge" damping=".2" stiffness="1" armature=".01" />
+        <geom name="fl_thigh" type="mesh" mesh="coxa2" pos="-0.066 -0.115 -0.12" rgba="1 0.54 0 1"/>
+        <body name="fl_mid_link" pos="0.46 0 0" euler="90 0 0" >
+          <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+          <geom name="fl_thigh_motor" type="mesh" mesh="motor_AX18" pos="0 0 0" euler="0 0 0" rgba="0 0 0 1"/>
+          <geom name="fl_thigh_link" type="mesh" mesh="femur2" pos="-0.05 0.108 -0.12" euler="0 0 -90" rgba="1 0.54 0 1"/>
+          <geom name="fl_BLDC" type="mesh" mesh="bldc1" pos="-0.545 0.1 -0.618" rgba="0.4 0.5 0.8 1" />
+          <body name="fl_prop" pos="0.074 0.24 0" euler="-90 0 0">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" />
+            <geom name="fl_prop" type="mesh" mesh="prop" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.2 0.4 0.8 1" />
+            <geom name="fl_prop_spinner" type="mesh" mesh="spinner" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.5 0 0 1" />
+          </body>
+          <body name="fl_final_link" pos="0.326 -0.075 0." euler="0 0 -45">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+            <!-- <geom name="ref_cylinder" type="cylinder" size="0.01 0.2"/> -->
+            <!-- <geom name="ref_sphere" type="sphere" size="0.03"/> -->
+            <geom name="fl_final_motor" type="mesh" mesh="motor_AX18" rgba="0 0 0 1"/>
+            <geom name="fl_final_link" type="mesh" mesh="tibia2" pos="0.433 -0.6 0.125" euler="180 0 180" rgba="1 0.54 0 1"/>
+          </body>
+        </body>
+      </body>
+      <body name="br" pos="0.326 -0.598 0.095" euler="0 0 -15">
+        <joint type="hinge" damping=".2" stiffness="1" armature=".01" />
+        <geom name="br_thigh" type="mesh" mesh="coxa2" pos="-0.066 -0.115 -0.12" rgba="1 0.54 0 1"/>
+        <body name="br_mid_link" pos="0.46 0 0" euler="90 0 0" >
+          <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+          <geom name="br_thigh_motor" type="mesh" mesh="motor_AX18" pos="0 0 0" euler="0 0 0" rgba="0 0 0 1"/>
+          <geom name="br_thigh_link" type="mesh" mesh="femur2" pos="-0.05 0.108 -0.12" euler="0 0 -90" rgba="1 0.54 0 1"/>
+          <geom name="br_BLDC" type="mesh" mesh="bldc1" pos="-0.545 0.1 -0.618" rgba="0.4 0.5 0.8 1" />
+          <body name="br_prop" pos="0.074 0.24 0" euler="-90 0 0">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" />
+            <geom name="br_prop" type="mesh" mesh="prop" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.2 0.4 0.8 1" />
+            <geom name="br_prop_spinner" type="mesh" mesh="spinner" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.5 0 0 1" />
+          </body>
+          <body name="br_final_link" pos="0.326 -0.075 0." euler="0 0 -45">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+            <!-- <geom name="ref_cylinder" type="cylinder" size="0.01 0.2"/> -->
+            <!-- <geom name="ref_sphere" type="sphere" size="0.03"/> -->
+            <geom name="br_final_motor" type="mesh" mesh="motor_AX18" rgba="0 0 0 1"/>
+            <geom name="br_final_link" type="mesh" mesh="tibia2" pos="0.433 -0.6 0.125" euler="180 0 180" rgba="1 0.54 0 1"/>
+          </body>
+        </body>
+      </body>
+      <body name="bl" pos="-0.326 -0.598 0.095" euler="0 0 195">
+        <joint type="hinge" damping=".2" stiffness="1" armature=".01" />
+        <geom name="bl_thigh" type="mesh" mesh="coxa2" pos="-0.066 -0.115 -0.12" rgba="1 0.54 0 1"/>
+        <body name="bl_mid_link" pos="0.46 0 0" euler="90 0 0" >
+          <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+          <geom name="bl_thigh_motor" type="mesh" mesh="motor_AX18" pos="0 0 0" euler="0 0 0" rgba="0 0 0 1"/>
+          <geom name="bl_thigh_link" type="mesh" mesh="femur2" pos="-0.05 0.108 -0.12" euler="0 0 -90" rgba="1 0.54 0 1"/>
+          <geom name="bl_BLDC" type="mesh" mesh="bldc1" pos="-0.545 0.1 -0.618" rgba="0.4 0.5 0.8 1" />
+          <body name="bl_prop" pos="0.074 0.24 0" euler="-90 0 0">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" />
+            <geom name="bl_prop" type="mesh" mesh="prop" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.2 0.4 0.8 1" />
+            <geom name="bl_prop_spinner" type="mesh" mesh="spinner" pos="-0.62 0.619 -.18" euler="90 0 0" rgba="0.5 0 0 1" />
+          </body>
+          <body name="bl_final_link" pos="0.326 -0.075 0." euler="0 0 -45">
+            <joint type="hinge" damping=".2" stiffness="10" armature=".01" axis="0 0 -1"/>
+            <!-- <geom name="ref_cylinder" type="cylinder" size="0.01 0.2"/> -->
+            <!-- <geom name="ref_sphere" type="sphere" size="0.03"/> -->
+            <geom name="bl_final_motor" type="mesh" mesh="motor_AX18" rgba="0 0 0 1"/>
+            <geom name="bl_final_link" type="mesh" mesh="tibia2" pos="0.433 -0.6 0.125" euler="180 0 180" rgba="1 0.54 0 1"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+</mujoco>
